@@ -22,12 +22,18 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{eskdfont}[2010/01/14 v0.98 Font Definitions]
 
+\RequirePackage{xltxtra}
+\RequirePackage{xecyr}
+
+%\setmainfont{GOST2304 Type A}
+\setmainfont{OpenGost Type A TT}
+
 \newcommand{\ESKDfontBaseLineStretch}{1}
 
 \newcommand{\ESKDfontSetBaseLineStretch}{%
   \renewcommand{\baselinestretch}{\ESKDfontBaseLineStretch}}
 
-\newcommand{\ESKDfontShape}{\slshape}
+\newcommand{\ESKDfontShape}{\slshape} %\normalfont
 
 \newcommand{\ESKDfontIIsize}{\fontsize{8pt}{10pt}}
 \newcommand{\ESKDfontIIIsize}{\fontsize{10pt}{12pt}}
