@@ -19,6 +19,13 @@
 % This is automaticaly generated file, do not edit it.
 %
 
+% Основным назначением этого стиля является переопределение команды
+% \maketitle - команды создания титульного листа текстового документа
+% согласно требованиям ГОСТ 2.105-95
+% С помощью данного стиля можно создавать титульные листы документов,
+% утверждаемые непосредственно (с грифами согласований/утверждений),
+% титульные листы документов утверждаемые отдельным листом утверждения,
+% собственно, сам лист утверждения (совместно со стилем eskdappsheet).
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{eskdtitle}[2010/01/14 v0.98 Title GOST 2.105]
 
@@ -27,80 +34,121 @@
 \RequirePackage{eskdinfo}
 \RequirePackage{eskdtitlebase}
 
+% Команда определяет две области (parbox) по горизонтали. Каждая область шириной 0.4 ширины текста
+% Текст 1-й области определяется 1-м аргументом, 2-й области 2-м аргументом.
+% Команда используется для размещения грифов
 \newcommand{\ESKD@title@split@field}[2]{%
   \parbox[t]{.4\hsize}{\raggedright#1}\hfill
   \parbox[t]{.4\hsize}{\raggedright#2}}
 
+% Первое поле надписей титульного листа
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Команда выводит название ведомства (ESKDtheDepartment)
+% и под ним название организации, разработавшей документ (ESKDtheCompany)
 \renewcommand{\ESKDtheTitleFieldI}{%
   \ESKDtheDepartment\par\ESKDtheCompany}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Второе поле
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Команда выводит две надписи по горизонтали.
+% Слева код по классификатору \ESKDclassCode, справа пустую надпись.
 \def\ESKDtheTitleFieldIIl{}
 \renewcommand{\ESKDtheTitleFieldIIl}{%
   \ESKDtheClassCode}
 \def\ESKDtheTitleFieldIIr{}
 \renewcommand{\ESKDtheTitleFieldIIr}{}
+% Собственно сама команда ввода 2-го поля надписей
 \renewcommand{\ESKDtheTitleFieldII}{%
   \ESKD@title@split@field{\ESKDtheTitleFieldIIl}{\ESKDtheTitleFieldIIr}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Третье поле
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Формирование левого грифа ("Согласовано" либо "Утверждён")
 \def\ESKDtheTitleFieldIIIl{}
 \renewcommand{\ESKDtheTitleFieldIIIl}{%
-  \ifx\ESKD@title@approving@sheet\@undefined
-    \expandafter\ifx\csname ESKD@title@agreed@name@1\endcsname\relax\else
-      \textbf{\MakeUppercase{\ESKDagreedName}}\\
-      \ESKD@title@make@stamp{agreed}{1}
+  \ifx\ESKD@title@approving@sheet\@undefined  % если для документа нет листа утверждения
+    \expandafter\ifx\csname ESKD@title@agreed@name@1\endcsname\relax\else % если имя 1-го согласовавшего определено
+      \textbf{\MakeUppercase{\ESKDagreedName}}\\  % вводится надпись "Согласовано"
+      \ESKD@title@make@stamp{agreed}{1}           % и гриф для подписи и даты
     \fi
-  \else
-    \textbf{\MakeUppercase{\ESKDapprovedName}}\\
-    \ESKD@title@approving@sheet
+  \else                                           % если для документа есть лист утверждения
+    \textbf{\MakeUppercase{\ESKDapprovedName}}\\  % вводится надпись "Утверждён"
+    \ESKD@title@approving@sheet                   % и децимальный номер листа утверждения
   \fi}
+% Формирование правого грифа ("Утверждаю")
 \def\ESKDtheTitleFieldIIIr{}
 \renewcommand{\ESKDtheTitleFieldIIIr}{%
-  \ifx\ESKD@title@approving@sheet\@undefined
-    \expandafter\ifx\csname ESKD@title@approved@name@1\endcsname\relax\else
-      \textbf{\MakeUppercase{\ESKDapprovingName}}\\
-      \ESKD@title@make@stamp{approved}{1}
+  \ifx\ESKD@title@approving@sheet\@undefined % если для документа нет листа утверждения
+    \expandafter\ifx\csname ESKD@title@approved@name@1\endcsname\relax\else % если имя утверждающего определено
+      \textbf{\MakeUppercase{\ESKDapprovingName}}\\   % вводится надпись "Утверждаю"
+      \ESKD@title@make@stamp{approved}{1}             % и гриф для подписи и даты
     \fi
   \fi}
+% Собственно сама команда ввода 3-го поля надписей
 \renewcommand{\ESKDtheTitleFieldIII}{%
   \ESKD@title@split@field{\ESKDtheTitleFieldIIIl}{\ESKDtheTitleFieldIIIr}}
 
+% Четвёртое поле
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Команда выводит наименование изделия (\ESKDTitle) и название документа (\ESKDdocName)
 \renewcommand{\ESKDtheTitleFieldIV}{%
   \MakeUppercase{\ESKDtheTitle}\par\ESKDtheDocName}
 
+% Пятое поле
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Для листа утверждения это надпись "Лист утверждения" (переопределяется в eskdappsheet)
+% Для титульного листа пустое поле
 \renewcommand{\ESKDtheTitleFieldV}{}
 
+% Шестое поле
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Децимальный номер документа (\ESKDsignature)
 \renewcommand{\ESKDtheTitleFieldVI}{%
   \MakeUppercase{\ESKDtheSignature}}
 
+% Седьмое поле
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Количество листов листа утверждения. Если лист один, поле пустое
 \renewcommand{\ESKDtheTitleFieldVII}{}
 
+% Восьмое поле
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Формирование левых грифов
 \def\ESKDtheTitleFieldVIIIl{}
 \renewcommand{\ESKDtheTitleFieldVIIIl}{%
-  \ifx\ESKD@title@approving@sheet\@undefined
+  \ifx\ESKD@title@approving@sheet\@undefined                % если для документа нет листа утверждения
     \ESKD@tmpcnta = 1
-    \loop
+    \loop                                                   % начало цикла ввода грифов для всех согласовавших лиц, начиная со 2-го
     \ifnum \ESKD@tmpcnta < \ESKD@title@agreed@cnt
       \advance \ESKD@tmpcnta 1
       \ESKD@title@make@stamp{agreed}{\number\ESKD@tmpcnta}
       \par\vspace{5mm}
-    \repeat
+    \repeat                                                 % конец ввода грифов
   \fi}
+% Формирование правых грифов
 \def\ESKDtheTitleFieldVIIIr{}
 \renewcommand{\ESKDtheTitleFieldVIIIr}{%
-  \ifx\ESKD@title@approving@sheet\@undefined
+  \ifx\ESKD@title@approving@sheet\@undefined                % если для документа нет листа утверждения
     \ESKD@tmpcnta = 0
-    \loop
+    \loop                                                   % начало цикла ввода грифов для всех разработавших лиц
     \ifnum \ESKD@tmpcnta < \ESKD@title@designed@cnt
       \advance \ESKD@tmpcnta 1
       \ESKD@title@make@stamp{designed}{\number\ESKD@tmpcnta}
       \par\vspace{5mm}
-    \repeat
+    \repeat                                                 % конец ввода грифов
   \fi}
+% Собственно сама команда ввода 8-го поля надписей
 \renewcommand{\ESKDtheTitleFieldVIII}{%
   \ESKD@title@split@field{\ESKDtheTitleFieldVIIIl}{\ESKDtheTitleFieldVIIIr}}
 
+% Десятое поле
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Год выпуска документа
 \renewcommand{\ESKDtheTitleFieldX}{\ESKDtheYear}
 
+% Определение шрифтов титульного листа
 \renewcommand{\ESKDtitleFontI}{\ESKDfontV}
 \renewcommand{\ESKDtitleFontII}{\ESKDfontIII}
 \renewcommand{\ESKDtitleFontIII}{%
@@ -113,25 +161,26 @@
   \ESKDfontIII\renewcommand{\baselinestretch}{1.25}\selectfont}
 \renewcommand{\ESKDtitleFontX}{\ESKDfontV}
 
+% Переопределение команды создания титульного листа
 \renewcommand{\maketitle}{%
-  \begin{ESKDtitlePage}
+  \begin{ESKDtitlePage}                                                     % включаем окружение "Титульный лист"
   \setlength{\topsep}{0mm}
-  \noindent
-  \parbox[c][.28\vsize][t]{\hsize}{%
-    \begin{center}\ESKDtitleFontI\bfseries\ESKDtheTitleFieldI\end{center}
-    \vspace{5mm \@plus 15mm \@minus 3mm}
-    \begin{center}\ESKDtitleFontII\ESKDtheTitleFieldII\end{center}
-    \vspace{10mm \@plus 20mm \@minus 6mm}
-    \begin{center}\ESKDtitleFontIII\ESKDtheTitleFieldIII\end{center}}
-  \par\vspace{10mm \@plus 2mm \@minus 4mm}\noindent
-  \parbox[c][.30\vsize][t]{\hsize}{%
-    \begin{center}\ESKDtitleFontIV\bfseries\ESKDtheTitleFieldIV\end{center}
-    \begin{center}\ESKDtitleFontV\ESKDtheTitleFieldV\end{center}
-    \begin{center}\ESKDtitleFontVI\ESKDtheTitleFieldVI\end{center}
-    \begin{center}\ESKDtitleFontVII\ESKDtheTitleFieldVII\end{center}}
-  \par\vspace{4mm \@plus 2mm \@minus 2mm}\noindent
-  \begin{center}\ESKDtitleFontVIII\ESKDtheTitleFieldVIII\end{center}
+  \noindent                                                                 % без абзацного отступа
+  \parbox[c][.28\vsize][t]{\hsize}{%                                        % первая группа ярусов
+    \begin{center}\ESKDtitleFontI\bfseries\ESKDtheTitleFieldI\end{center}   % Название ведомства и организации
+    \vspace{5mm \@plus 15mm \@minus 3mm}                                    % Отступ
+    \begin{center}\ESKDtitleFontII\ESKDtheTitleFieldII\end{center}          % Код по классификатору
+    \vspace{10mm \@plus 20mm \@minus 6mm}                                   % Отступ
+    \begin{center}\ESKDtitleFontIII\ESKDtheTitleFieldIII\end{center}}       % Согласовано/Утверждён Утверждаю Конец первой группы ярусов
+  \par\vspace{10mm \@plus 2mm \@minus 4mm}\noindent                         % Отступ
+  \parbox[c][.30\vsize][t]{\hsize}{%                                        % вторая группа ярусов
+    \begin{center}\ESKDtitleFontIV\bfseries\ESKDtheTitleFieldIV\end{center} % Наименование изделия, название документа
+    \begin{center}\ESKDtitleFontV\ESKDtheTitleFieldV\end{center}            % "Лист утверждения" в случае листа утверждения
+    \begin{center}\ESKDtitleFontVI\ESKDtheTitleFieldVI\end{center}          % Децимальный номер документа
+    \begin{center}\ESKDtitleFontVII\ESKDtheTitleFieldVII\end{center}}       % Количество листов в листе утверждения Конец второй группы полей
+  \par\vspace{4mm \@plus 2mm \@minus 2mm}\noindent                          % Отступ
+  \begin{center}\ESKDtitleFontVIII\ESKDtheTitleFieldVIII\end{center}        % Грифы для остальных согласовавших и разработавших лиц
   \vfill
-  \begin{center}\ESKDtitleFontX\ESKDtheTitleFieldX\end{center}
+  \begin{center}\ESKDtitleFontX\ESKDtheTitleFieldX\end{center}              % Год выпуска документа
   \end{ESKDtitlePage}}
 

@@ -25,21 +25,34 @@
 \RequirePackage{eskdlang}
 \RequirePackage{eskdtitle}
 
+% Счётчик перечисления утверждаемых документов
 \newcount\ESKD@appsheet@doc@cnt
 \ESKD@appsheet@doc@cnt = 0
 
+% Команда определяет макрос, содержащий децимальный номер утверждаемого
+% документа. Сколько документов необходимо утвердить в листе, столько
+% раз вызывается команда \ESKDapprovingDoc с соответствующим децимальным номером документа
 \newcommand{\ESKDapprovingDoc}[1]{%
   \advance \ESKD@appsheet@doc@cnt 1
   \@namedef{ESKD@appsheet@doc@\number\ESKD@appsheet@doc@cnt}{#1}}
 
+% Пятое поле переопределяется надписью "Лист утверждения"
 \renewcommand{\ESKDtheTitleFieldV}{%
   \ESKDapprovingSheetName}
 
+% Шестое поле переопределяется тем же значением
 \renewcommand{\ESKDtheTitleFieldVI}{%
   \MakeUppercase{\ESKDtheSignature}}
 
+% Седьмое поле остаётся пустым (многостраничные листы утверждения пока не поддерживаются)
 \renewcommand{\ESKDtheTitleFieldVII}{}
 
+% Формируются левая и правая части восьмого поля
+% Слева помещаются децимальные номера документов,
+% имеющие нечётные номера счётчика \ESKD@appsheet@doc@cnt
+% Справа - децимальные номера, имеющие чётные номера счётчика
+
+% Левая часть восьмого поля
 \def\ESKDtheTitleFieldVIIIlb{}
 \renewcommand{\ESKDtheTitleFieldVIIIlb}{%
   \ESKD@tmpcnta = 1
@@ -50,6 +63,7 @@
     \@nameuse{ESKD@appsheet@doc@\number\ESKD@tmpcnta}\par
     \advance \ESKD@tmpcnta 2
   \repeat}
+% Правая часть восьмого поля
 \def\ESKDtheTitleFieldVIIIrb{}
 \renewcommand{\ESKDtheTitleFieldVIIIrb}{%
   \ESKD@tmpcnta = 2
@@ -60,14 +74,20 @@
     \@nameuse{ESKD@appsheet@doc@\number\ESKD@tmpcnta}\par
     \advance \ESKD@tmpcnta 2
   \repeat}
+% Переопределяется команда ввода восьмого поля.
+% После грифов согласовавших (слева) и разработавших (справа) лиц
+% помещаются списки утверждаемых документов
 \renewcommand{\ESKDtheTitleFieldVIII}{%
   \ESKD@title@split@field{\ESKDtheTitleFieldVIIIl}{\ESKDtheTitleFieldVIIIr}
   \par
   \ESKD@title@split@field{\ESKDtheTitleFieldVIIIlb}{\ESKDtheTitleFieldVIIIrb}}
 
+% Десятое поле переопределяется на пустое (год выпуска документа не выводится)
 \renewcommand{\ESKDtheTitleFieldX}{}
 
+% Переопределяется шрифт десятого поля
 \renewcommand{\ESKDtitleFontX}{\ESKDfontIII}
 
+% Вводится новая команда создания листа утверждения
 \newcommand{\ESKDmakeApprovingSheet}{\maketitle}
 

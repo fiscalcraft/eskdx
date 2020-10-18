@@ -19,35 +19,79 @@
 % This is automaticaly generated file, do not edit it.
 %
 
+% В данном файле определяются команды, которые определяют макросы названия должности и ФИО.
+% Макрос должности имеет форму: ESKD@title@#arg1@post@#arg2 и содержит текст названия должности.
+% Макрос ФИО имеет форму: ESKD@title@#arg1@name@#arg2 и содержит ФИО.
+% то есть имена макросов состоят из постоянной и переменной (изменяемой) частей.
+% #arg1 и #arg2 - переменные части в имени макроса.
+% #arg1 может принимать значения approved и agreed.
+% Если #arg1 принимает значение approved, то будут вызваны (в документ будет помещено их содержимое)
+% макросы ESKD@title@approved@post@1, и ESKD@title@approved@name@1, содержащие должность и ФИО утвердившего лица.
+% В этом случае #arg2, содержащий счётчик данных макросов, использоваться не будет, так как лицо, утверждающее
+% документ всегда одно.
+% Если #arg1 принимает значение agreed, то будут вызваны макросы ESKD@title@agreed@post@#arg2 и
+% ESKD@title@agreed@name@#arg2, содержащие должность и ФИО согласовавшего лица. #arg2 заменяется номером
+% согласовавшего лица (их может быть несколько).
+% Если #arg1 принимает значение designed, то будут вызваны макросы ESKD@title@designed@post@#arg2 и
+% ESKD@title@designed@name@#arg2, содержащие должность и ФИО лица, разработавшего документ. #arg2 заменяется номером
+% лица, разработавшего документ (их может быть несколько).
+
+% Содержимое макросов ESKD@title@approved@post@1 и ESKD@title@approved@name@1 определяется вызовом команды
+% \ESKDtitleApprovedBy{Должность}{Фамилия И.О.}. Команда должна вызываться один раз.
+
+% Содержимое макросов ESKD@title@agreed@post@#arg2 и ESKD@title@agreed@name@#arg2 определяется вызовом команды
+% \ESKDtitleAgreedBy{Должность}{Фамилия И.О.}. При каждом вызове этой команды #arg2 увеличивается на 1, таким образом,
+% сколько раз будет вызвана эта команда, столько же раз будет создана пара макросов, с отличающимися друг от друга именами:
+% ESKD@title@agreed@post@1 и ESKD@title@agreed@name@1
+% ESKD@title@agreed@post@2 и ESKD@title@agreed@name@2
+% ESKD@title@agreed@post@3 и ESKD@title@agreed@name@3
+% и каждая пара будет содержать заданную при вызове должность и ФИО.
+
+%Точно так же работает и команда \ESKDtitleDesignedBy
+
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{eskdtitlebase}[2010/01/14 v0.98 Base Title Commands]
 
+% Команда определяет макросы, содержащие должность, и ФИО утвердившего документ.
 \newcommand{\ESKDtitleApprovedBy}[2]{%
   \@namedef{ESKD@title@approved@post@1}{#1}
   \@namedef{ESKD@title@approved@name@1}{#2}}
 
+% Определяются и инициализируются счётчики согласовавших и разработавших документ лиц
 \newcount\ESKD@title@agreed@cnt
 \newcount\ESKD@title@designed@cnt
 \ESKD@title@agreed@cnt = 0
 \ESKD@title@designed@cnt = 0
 
+% Команда определяет макросы, содержащие должность и ФИО согласовавших лиц
 \newcommand{\ESKDtitleAgreedBy}[2]{%
   \advance \ESKD@title@agreed@cnt 1
   \@namedef{ESKD@title@agreed@post@\number\ESKD@title@agreed@cnt}{#1}
   \@namedef{ESKD@title@agreed@name@\number\ESKD@title@agreed@cnt}{#2}}
 
+% Команда определяет макросы, содержащие должность и ФИО разработавших документ лиц
 \newcommand{\ESKDtitleDesignedBy}[2]{%
   \advance \ESKD@title@designed@cnt 1
   \@namedef{ESKD@title@designed@post@\number\ESKD@title@designed@cnt}{#1}
   \@namedef{ESKD@title@designed@name@\number\ESKD@title@designed@cnt}{#2}}
 
+% Создаётся переменная-флаг признака листа утверждения?
 \let\ESKD@title@approving@sheet\@undefinded
+% Команда для изменения этой переменной
 \newcommand{\ESKDtitleApprovingSheet}[1]{%
   \def\ESKD@title@approving@sheet{#1}}
 
+% Команда помещает на документ "шапку" для росписи и даты.
+% На первой строке первый аргумент (должность)
+% на второй строке подчёркивание для росписи и второй аргумент (ФИО)
+% на третьей строке подчёркивания для числа (в кавычках), месяца и года
 \newcommand{\ESKDtitleMakeStamp}[2]{#1\\\rule{2cm}{.1mm}\ #2\\
 "\rule{.8cm}{.1mm}" \rule{2.3cm}{.1mm}\ \rule{1.5cm}{.1mm}}
 
+% команда вызывает команду ESKDtitleMakeStamp с нужными
+% макросами в качестве аргументов. Например, если вызвать
+% \ESKD@title@make@stamp{agreed}{2} то будет создана шапка
+% с фамилией и должностью второго согласовавшего лица
 \newcommand{\ESKD@title@make@stamp}[2]{%
   \ESKDtitleMakeStamp{%
     \@nameuse{ESKD@title@#1@post@#2}}{%
@@ -74,14 +118,15 @@
 \newcommand{\ESKDtitleFontIX}{}
 \newcommand{\ESKDtitleFontX}{}
 
-\def\ESKD@title@after@page{%
+\def\ESKD@title@after@page{% набор команд, который выполняется после завершения окружения "Титульный лист"
   \ESKDclearDoublePage
-  \ESKDstyle{\ESKD@default@style@other}
-  \ESKDthisStyle{\ESKD@default@style@first}}
+  \ESKDstyle{\ESKD@default@style@other} % стиль остальных листов formIIab или empty
+  \ESKDthisStyle{\ESKD@default@style@first}} % стиль следующего за титульным листа: formI, formII или empty
 
+% Определяется окружение "Титульный лист"
 \newenvironment{ESKDtitlePage}{%
-  \begin{ESKDpadding}{5mm}{5mm}
-  \ESKDstyle{\ESKD@default@style@title}}{%
-  \end{ESKDpadding}
-  \aftergroup\ESKD@title@after@page}
+  \begin{ESKDpadding}{5mm}{5mm}   % начинает новую страницу с полями 5мм
+  \ESKDstyle{\ESKD@default@style@title}}{% задаёт границы текста для стиля title
+  \end{ESKDpadding} % завершает и "распечатывает" страницу с полями 5мм
+  \aftergroup\ESKD@title@after@page}  % после завершения окружения "Титульный лист" выполнить \ESKD@title@after@page (см. выше)
 

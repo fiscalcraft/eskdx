@@ -22,15 +22,19 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{eskdinfo}[2010/01/14 v0.98 Document Information]
 
+% Команда задания ведомства, куда входит организация, разработавшая документ
 \newcommand{\ESKDtheDepartment}{}
 \newcommand{\ESKDdepartment}[1]{\renewcommand{\ESKDtheDepartment}{#1}}
 
+% Команда задания наименования организации, разработавшей документ
 \newcommand{\ESKDtheCompany}{}
 \newcommand{\ESKDcompany}[1]{\renewcommand{\ESKDtheCompany}{#1}}
 
+% Команда задания кода документа по классификатору
 \newcommand{\ESKDtheClassCode}{}
 \newcommand{\ESKDclassCode}[1]{\renewcommand{\ESKDtheClassCode}{#1}}
 
+% Команда задаёт наименование изделия и переопределяет команды-синонимы
 \newcommand{\ESKDtheUnitName}{}
 \newcommand{\ESKDunitName}[1]{%
   \renewcommand{\ESKDtheUnitName}{#1}%
@@ -39,9 +43,11 @@
 \newcommand{\ESKDtitle}[1]{\ESKDunitName{#1}}
 \renewcommand{\title}[1]{\ESKDunitName{#1}}
 
+% Команда определяет название документа
 \newcommand{\ESKDtheDocName}{}
 \newcommand{\ESKDdocName}[1]{\renewcommand{\ESKDtheDocName}{#1}}
 
+% Команда определяет децимальный номер документа
 \newcommand{\ESKDtheSignature}{}
 \newcommand{\ESKDsignature}[1]{\renewcommand{\ESKDtheSignature}{#1}}
 
