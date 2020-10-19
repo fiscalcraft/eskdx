@@ -26,89 +26,94 @@
 
 \newcommand{\ESKD@paper}{a4}
 
-\newif\ifESKD@landscape
-\ESKD@landscapefalse
-\newif\ifESKD@given@landscape
-\ESKD@given@landscapefalse
-
+\newif\ifESKD@landscape                           % Определяем условие ESKD@landscape
+\ESKD@landscapefalse                              % присваиваем ему значение false
+\newif\ifESKD@given@landscape                     % Определяем условие ESKD@given@landscape
+\ESKD@given@landscapefalse                        % присваиваем ему значение false
+% Объявляются ключевые слова
 \newcommand{\ESKD@default@style@title}{title}
 \newcommand{\ESKD@default@style@first}{formII}
 \newcommand{\ESKD@default@style@other}{formIIab}
-
-\newlength{\ESKD@margin@si}
-\newlength{\ESKD@margin@so}
-\newlength{\ESKD@margin@t}
-\newlength{\ESKD@margin@b}
+% Объявляются ширины основных полей 
+\newlength{\ESKD@margin@si}       % Левое поле штампа
+\newlength{\ESKD@margin@so}       % Правое поле штампа
+\newlength{\ESKD@margin@t}        % Верхнее поле штампа
+\newlength{\ESKD@margin@b}        % Нижнее поле штампа
+% Присваиваются значения ширинам основных полей
 \setlength{\ESKD@margin@si}{20mm}
 \setlength{\ESKD@margin@so}{5mm}
 \setlength{\ESKD@margin@t}{5mm}
 \setlength{\ESKD@margin@b}{5mm}
-
+% Объявляются толщины основных линий (толстая/тонкая)
 \newlength{\ESKDlineThick}
 \newlength{\ESKDlineThin}
+% Присваиваются значения толщинам основных линий
 \setlength{\ESKDlineThick}{.4mm}
 \setlength{\ESKDlineThin}{.2mm}
-
+% Объявляются зазоры слева-справа и сверху-снизу между текстом и границами штампа
 \newlength{\ESKD@padding@h}
 \newlength{\ESKD@padding@v}
 \setlength{\ESKD@padding@h}{3mm}
 \setlength{\ESKD@padding@v}{10mm}
-
-\newif\ifESKD@ignstamp
+% Ключи включения-выключения штампа и его полей
+\newif\ifESKD@ignstamp              % ESKD@ignstamp - отключение штампа?
 \ESKD@ignstampfalse
 
-\newif\ifESKD@enable@column@vii
+\newif\ifESKD@enable@column@vii     % Лист?
 \ESKD@enable@column@viitrue
 \newif\ifESKD@given@column@vii
 \ESKD@given@column@viifalse
 
-\newif\ifESKD@enable@column@viii
+\newif\ifESKD@enable@column@viii    % Листов?
 \ESKD@enable@column@viiitrue
 
-\newif\ifESKD@enable@columns@xix
+\newif\ifESKD@enable@columns@xix    % Инв. № подл. ?
 \ESKD@enable@columns@xixtrue
 
-\newif\ifESKD@enable@columns@xxiv
+\newif\ifESKD@enable@columns@xxiv   % Справ № ?
 \ESKD@enable@columns@xxivfalse
 
-\newif\ifESKD@enable@column@xxvi
+\newif\ifESKD@enable@column@xxvi    % "Перевёрнутый уголок" ?
 \ESKD@enable@column@xxvifalse
 
-\newif\ifESKD@enable@columns@xxvii
+\newif\ifESKD@enable@columns@xxvii  % технолог. поле ?
 \ESKD@enable@columns@xxviifalse
 
-\newif\ifESKD@enable@column@xxxi
+\newif\ifESKD@enable@column@xxxi    % Копировал ?
 \ESKD@enable@column@xxxitrue
 
-\newif\ifESKD@enable@column@xxxii
+\newif\ifESKD@enable@column@xxxii   % Формат ?
 \ESKD@enable@column@xxxiitrue
 
-\newif\ifESKD@enable@column@xxxiii
+\newif\ifESKD@enable@column@xxxiii  % зона изменений ?
 \ESKD@enable@column@xxxiiifalse
 
-\newif\ifESKD@enable@column@xxxiv
+\newif\ifESKD@enable@column@xxxiv   % "перевёрнутый уголок заказчика" ?
 \ESKD@enable@column@xxxivfalse
 
-\newif\ifESKD@twoside
+\newif\ifESKD@twoside               % режим двусторонней печати ?
 \ESKD@twosidefalse
 
-\newif\ifESKD@zonelabels
+\newif\ifESKD@zonelabels            % имена зон ?
 \ESKD@zonelabelsfalse
 
 \RequirePackage{keyval}
-
+% Опции выбора формата бумаги
 \DeclareOption{a0paper}{\renewcommand{\ESKD@paper}{a0}}
 \DeclareOption{a1paper}{\renewcommand{\ESKD@paper}{a1}}
 \DeclareOption{a2paper}{\renewcommand{\ESKD@paper}{a2}}
 \DeclareOption{a3paper}{\renewcommand{\ESKD@paper}{a3}}
 \DeclareOption{a4paper}{\renewcommand{\ESKD@paper}{a4}}
+% Опция выбора ориентации бумаги
 \DeclareOption{landscape}{%
   \ESKD@landscapetrue%
   \ESKD@given@landscapetrue}
 \DeclareOption{portrait}{%
   \ESKD@landscapefalse%
   \ESKD@given@landscapetrue}
+% Определяется макрос увеличения нижнего зазора. Нигде в стилях не используется
 \define@key{eskd}{reduceheight}{\addtolength{\ESKD@margin@b}{#1}}
+% В зависимости от опции формы листа определяются стили титульного листа, первого и последующих листов
 \DeclareOption{formI}{%
   \renewcommand{\ESKD@default@style@first}{formI}
   \renewcommand{\ESKD@default@style@other}{formIIab}
@@ -121,11 +126,13 @@
   \renewcommand{\ESKD@default@style@first}{empty}
   \renewcommand{\ESKD@default@style@other}{empty}
   \renewcommand{\ESKD@default@style@title}{empty}}
+% Опция включения/выключения полей для подшивки
 \DeclareOption{stitching}{\setlength{\ESKD@margin@si}{20mm}}
 \DeclareOption{nostitching}{%
   \setlength{\ESKD@margin@si}{5mm}%
   \ESKD@enable@columns@xixfalse%
   \ESKD@enable@columns@xxivfalse}
+% Опция включения/выключения штампа
 \DeclareOption{ignorestamp}{\ESKD@ignstamptrue}
 \DeclareOption{noignorestamp}{\ESKD@ignstampfalse}
 \DeclareOption{columnvii}{%
