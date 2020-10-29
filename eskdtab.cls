@@ -45,6 +45,7 @@
 
 \LoadClass{article}
 \RequirePackage{eskdlang}
-\RequirePackage[a4paper,formII]{eskdstamp}
+\RequirePackage[formII]{eskdstamp}
+% a4paper,
 \RequirePackage{eskdinfo}
 
