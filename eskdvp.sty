@@ -1,0 +1,92 @@
+% Copyright 2006 Konstantin Korikov <lostclus@ua.fm>
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2003/12/01 or later.
+%
+% This work has the LPPL maintenance status "maintained".
+% 
+% This Current Maintainer of this work is Konstantin Korikov.
+%
+% This work consists of all files listed in manifest.txt.
+%
+
+%
+% This is automaticaly generated file, do not edit it.
+%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{eskdvp}[2010/01/14 v0.98 Form5a GOST 2.106.95]
+
+\RequirePackage{eskdlang}
+\RequirePackage{eskdstamp}
+\RequirePackage{rotating}
+\RequirePackage{array}
+\RequirePackage{longtable}
+
+\newcommand{\ESKDdrawVP}[1]{
+  \put(\ESKDltu{\ESKDframeX},\ESKDltu{\ESKDframeY}){%
+    \begin{picture}(0,0)
+      \ESKD@tmpdimc=8mm                           % высота строки
+      \ESKD@tmpcnta= #1                          %количество строк
+                         
+      \ESKD@tmpdimb=\ESKD@tmpdimc
+      \multiply\ESKD@tmpdimb by \ESKD@tmpcnta     % высота таблицы без заголовка с учётом целого числа строк
+      \advance\ESKD@tmpdimb 27mm                  % высота таблицы с заголовком в \ESKD@tmpdimb
+      \ESKD@tmpdima=\ESKDframeH                   % \paperheight-\ESKD@margin@t-\ESKD@margin@b
+      \advance\ESKD@tmpdima -\ESKD@tmpdimb        % координата нижней границы таблицы в \ESKD@tmpdima
+      \linethickness{\ESKDlineThick}              % толщина линии - толстая
+      \put(7,  \ESKDltu{\ESKD@tmpdima}){\line(0,1){\ESKDltu{\ESKD@tmpdimb}}}    % вертикальная линия первого столбца
+      \put(67, \ESKDltu{\ESKD@tmpdima}){\line(0,1){\ESKDltu{\ESKD@tmpdimb}}}    % второго столбца
+      \put(112,\ESKDltu{\ESKD@tmpdima}){\line(0,1){\ESKDltu{\ESKD@tmpdimb}}}    % третьего столбца
+      \put(182,\ESKDltu{\ESKD@tmpdima}){\line(0,1){\ESKDltu{\ESKD@tmpdimb}}}    % четвёртого столбца
+      \put(237,\ESKDltu{\ESKD@tmpdima}){\line(0,1){\ESKDltu{\ESKD@tmpdimb}}}    % пятого столбца
+      \put(307,\ESKDltu{\ESKD@tmpdima}){\line(0,1){\ESKDltu{\ESKD@tmpdimb}}}    % шестого столбца
+      \put(371,\ESKDltu{\ESKD@tmpdima}){\line(0,1){\ESKDltu{\ESKD@tmpdimb}}}    % седьмого столбца
+      \ESKD@tmpdimb=\ESKDframeH                                                 % высота зоны печати
+      \advance\ESKD@tmpdimb -27mm                                               % отступаем на высоту заголовка
+      \put(0,\ESKDltu{\ESKD@tmpdimb}){\line(1,0){\ESKDltu{\ESKDframeW}}}        % чертим горизонтальную линию
+      \linethickness{\ESKDlineThin}                                             % толщина линии - тонкая
+      \multiput(0,\ESKDltu{\ESKD@tmpdima})(0, 8){\the\ESKD@tmpcnta}{%           % чертим горизонтальные линии таблицы
+        \line(1,0){\ESKDltu{\ESKDframeW}}}
+    \end{picture}}}
+
+\newenvironment{ESKDvp}{%
+  \ESKDputOnStyle{formII}{vp}{\ESKDdrawVP{24}}
+  \ESKDputOnStyle{formIIab}{vp}{\ESKDdrawVP{29}}
+  \begin{ESKDzeroPadding}%
+    \setlength{\tabcolsep}{0mm}%
+    \setlength{\LTpre}{0mm}%
+    \setlength{\LTpost}{0mm}%
+    \setlength{\LTleft}{0mm}%
+    \setlength{\LTright}{\fill}%
+\newcolumntype{s}{>{\ESKDfontTabBody}c}%
+\newcolumntype{n}{>{\parbox[c][8mm][c]{1mm}{}\ESKDfontTabBody}c}%
+    \noindent%
+    \begin{longtable}{ssssssss}
+      \parbox[c][27mm][c]{7mm}{\centering\begin{sideways}\ESKDfontTabHead%
+      № строки\end{sideways}}&
+      \parbox[c][27mm][c]{60mm}{\centering\ESKDfontTabHead%
+      Наименование}&
+      \parbox[c][27mm][c]{45mm}{\centering\ESKDfontTabHead%
+      Код продукции}&
+      \parbox[c][27mm][c]{70mm}{\centering\ESKDfontTabHead%
+      Обозначение\\документа\\на поставку}&
+      \parbox[c][27mm][c]{55mm}{\centering\ESKDfontTabHead%
+      Поставщик}&
+      \parbox[c][27mm][c]{70mm}{\centering\ESKDfontTabHead%
+      Куда входит\\(обозначение)}&
+      \parbox[c][27mm][c]{64mm}{\centering\ESKDfontTabHead%
+      Количество}&
+      \parbox[c][27mm][c]{24mm}{\centering\ESKDfontTabHead%
+      Приме\-чание}\endhead}{%
+    \end{longtable}%
+  \end{ESKDzeroPadding}%
+  \ESKDremoveFromStyle{formII}{vp}%
+  \ESKDremoveFromStyle{formIIab}{vp}
+}
+
